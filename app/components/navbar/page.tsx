@@ -18,6 +18,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Avatar from '@mui/material/Avatar';
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -65,7 +66,7 @@ export default function Navbar() {
             component="div"
             sx={{ flexGrow: 0, display: { xs: 'none', md: 'block' } }}
           >
-            {session?.user?.name ? `Logged in as: ${session.user.name}` : 'Not logged in'}
+            Airsoft shop
           </Typography>
 
           {/* Center: Links */}
@@ -79,15 +80,23 @@ export default function Navbar() {
           </Box>
 
           {/* Right: Profile Icon with Dropdown */}
-          <IconButton
-            size="large"
-            edge="end"
-            color="inherit"
-            aria-label="account"
-            onClick={handleMenuOpen}
-          >
-            <AccountCircleIcon />
-          </IconButton>
+          {session?.user?.image ? (
+              <IconButton
+                size="large"
+                edge="end"
+                color="inherit"
+                aria-label="account"
+                onClick={handleMenuOpen}
+              >
+                <Avatar alt={session.user.name || 'Profile'} src={session.user.image} />
+              </IconButton>
+            ) : (
+              <Link href="/api/auth/signin" passHref>
+                <Button color="inherit" variant="outlined" size="small">
+                  Login
+                </Button>
+              </Link>
+            )}
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
@@ -96,6 +105,11 @@ export default function Navbar() {
             <MenuItem onClick={handleMenuClose}>
               <Link href="/profile" passHref>
                 My Profile
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={handleMenuClose}>
+              <Link href="/api/auth/signout" passHref>
+                Log out
               </Link>
             </MenuItem>
           </Menu>
