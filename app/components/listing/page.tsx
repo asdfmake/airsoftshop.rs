@@ -6,7 +6,7 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import React from 'react';
 import Grid from '@mui/material/Grid';
-import { Slider, Typography } from '@mui/material';
+import { Button, Slider, Typography } from '@mui/material';
 
 
 export default function ListingPage() {
@@ -36,15 +36,23 @@ export default function ListingPage() {
     <main>
         {/* Prvo idu filteri za listanje, a ispod njih su proizvodi */}
         <section>
-          <Grid container rowSpacing={1} columns={{ xs: 4, sm: 2, md: 1 }} spacing={2}>
+          <Typography
+            variant="h4"
+            gutterBottom
+            sx={{ width: '100%', textAlign: 'center', padding: 2}}
+          >
+            Filteri 
+          </Typography>
+          <Grid container rowSpacing={1} spacing={2}>
 
             {/* Search by name */}
-            <Grid size={{ sm: 4, md: 2, lg: 1 }}>
+            <Grid size={{ xs: 12, sm: 12, md: 6, lg: 3 }}>
               <TextField label="Search" variant="outlined" fullWidth />
             </Grid>
 
             {/* Filter by category */}
-            <Grid size={{ sm: 4, md: 2, lg: 1 }}>
+            <Grid size={{ xs: 12, sm: 12, md: 6, lg: 3 }}>
+              
               <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">Kategorija</InputLabel>
                   <Select
@@ -61,7 +69,7 @@ export default function ListingPage() {
               </FormControl>
             </Grid>
 
-            <Grid size={{ sm: 4, md: 2, lg: 1 }}>
+            <Grid size={{ xs: 12, sm: 12, md: 6, lg: 3 }}>
               {/* Filter by Condition */}
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Stanje</InputLabel>
@@ -79,7 +87,7 @@ export default function ListingPage() {
               </FormControl>
             </Grid>
 
-            <Grid size={{ sm: 4, md: 2, lg: 1 }}>
+            <Grid size={{ xs: 12, sm: 12, md: 6, lg: 3 }}>
               {/* Filter by Price */}
               <Typography id="track-false-slider" gutterBottom>
                 Cena
@@ -92,6 +100,12 @@ export default function ListingPage() {
                 getAriaValueText={valuetext}
                 disableSwap
               />
+            </Grid>
+
+            <Grid size={12} sx={{textAlign: 'center'}}>
+              <Button variant="contained" color="primary" size='large'>
+                Pretrazi
+              </Button>
             </Grid>
 
           </Grid>
