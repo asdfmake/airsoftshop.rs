@@ -10,12 +10,23 @@ import { Button, Slider, Typography } from '@mui/material';
 
 
 export default function ListingPage() {
-  const [age, setAge] = React.useState('');
-  const [value1, setValue1] = React.useState<number[]>([20, 37]);
-  
-  // Dodaj jos jedan ovaj za drugi filter
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
+  const [category, setCategory] = React.useState<string>("");
+  const [condition, setCondition] = React.useState<string>("");
+  const [priceRange, setPriceRange] = React.useState<number[]>([0, 10000]);
+
+  let filteri = {
+    search: '',
+    kategorija: category,
+    stanje: condition,
+    cena: {min: 0, max: 1000},
+  }
+  console.log(filteri);
+  const updateCategory = (event: SelectChangeEvent) => {
+    setCategory(event.target.value as string);
+  };
+
+  const updateCondition = (event: SelectChangeEvent) => {
+    setCondition(event.target.value as string);
   };
 
 
@@ -24,11 +35,11 @@ export default function ListingPage() {
     return `${value}°C`;
   }
 
-  const handleChange1 = (event: Event, newValue: number[], activeThumb: number) => {
+  const updatePriceRange = (event: Event, newValue: number[], activeThumb: number) => {
     if (activeThumb === 0) {
-      setValue1([Math.min(newValue[0], value1[1] - 10), value1[1]]);
+      setPriceRange([Math.min(newValue[0], priceRange[1] - 10), priceRange[1]]);
     } else {
-      setValue1([value1[0], Math.max(newValue[1], value1[0] + 10)]);
+      setPriceRange([priceRange[0], Math.max(newValue[1], priceRange[0] + 10)]);
     }
   };
   
@@ -58,9 +69,9 @@ export default function ListingPage() {
                   <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={age}
+                  value={category}
                   label="Kategorija"
-                  onChange={handleChange}
+                  onChange={updateCategory}
                 >
                   <MenuItem value={"replike"}>replike</MenuItem>
                   <MenuItem value={"rukohvati"}>rukohvati</MenuItem>
@@ -76,9 +87,9 @@ export default function ListingPage() {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={age}
+                  value={condition}
                   label="Stanje"
-                  onChange={handleChange}
+                  onChange={updateCondition}
                 >
                   <MenuItem value={"novo"}>Novo</MenuItem>
                   <MenuItem value={"korisceno"}>Korišćeno</MenuItem>
@@ -94,8 +105,8 @@ export default function ListingPage() {
               </Typography>
               <Slider
                 getAriaLabel={() => 'Minimum distance shift'}
-                value={value1}
-                onChange={handleChange1}
+                value={priceRange}
+                onChange={updatePriceRange}
                 valueLabelDisplay="auto"
                 getAriaValueText={valuetext}
                 disableSwap
