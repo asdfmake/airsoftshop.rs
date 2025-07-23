@@ -32,7 +32,7 @@ export default function ListingPage() {
 
   // Function to format the value for the slider tooltip
   function valuetext(value: number) {
-    return `${value}°C`;
+    return `${value}€`;
   }
 
   const updatePriceRange = (event: Event, newValue: number[], activeThumb: number) => {
@@ -100,17 +100,19 @@ export default function ListingPage() {
 
             <Grid size={{ xs: 12, sm: 12, md: 6, lg: 3 }}>
               {/* Filter by Price */}
-              <Typography id="track-false-slider" gutterBottom>
-                Cena
-              </Typography>
-              <Slider
-                getAriaLabel={() => 'Minimum distance shift'}
-                value={priceRange}
-                onChange={updatePriceRange}
-                valueLabelDisplay="auto"
-                getAriaValueText={valuetext}
-                disableSwap
-              />
+              <Box sx={{ width: '80%', margin: '0 auto' }}>
+                <Typography id="track-false-slider" gutterBottom>
+                  Cena
+                </Typography>
+                <Slider
+                  getAriaLabel={() => 'Minimum distance shift'}
+                  value={priceRange}
+                  onChange={updatePriceRange}
+                  valueLabelDisplay="auto"
+                  getAriaValueText={valuetext}
+                  disableSwap
+                />
+              </Box>
             </Grid>
 
             <Grid size={12} sx={{textAlign: 'center'}}>
