@@ -7,6 +7,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import React from 'react';
 import Grid from '@mui/material/Grid';
 import { Button, Slider, Typography } from '@mui/material';
+import ListingCard from '../card/page';
 
 
 export default function ListingPage() {
@@ -126,7 +127,7 @@ export default function ListingPage() {
 
 
         <div>
-        <h1>Listing Page</h1>
+          Ovde bi trebalo da ide lista proizvoda
         </div>
     </main>
   );
