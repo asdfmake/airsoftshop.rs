@@ -7,6 +7,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import React from 'react';
 import Grid from '@mui/material/Grid';
 import { Button, Slider, Typography } from '@mui/material';
+import prisma from '@/prisma/prisma';
 import ListingCard from '../card/page';
 
 
