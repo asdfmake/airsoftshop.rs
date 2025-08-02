@@ -1,13 +1,18 @@
-"use client"
+// app/page.tsx (root page)
 import Navbar from "@/app/components/navbar/page";
-import Image from "next/image";
 import ListingPage from "./components/listing/page";
 
-export default function Home() {
+interface RootPageProps {
+  searchParams: {
+    [key: string]: string | undefined;
+  };
+}
+
+export default function Home({ searchParams }: RootPageProps) {
   return (
     <main>
-      <Navbar/>
-      <ListingPage />
+      <Navbar />
+      <ListingPage searchParams={searchParams} />
     </main>
   );
 }
