@@ -9,12 +9,20 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import React from 'react';
 import Grid from '@mui/material/Grid';
 import { Button, Slider, Typography } from '@mui/material';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 
-export default function ListingFilters() {
-  const [category, setCategory] = React.useState<string>("");
-  const [condition, setCondition] = React.useState<string>("");
-  const [priceRange, setPriceRange] = React.useState<number[]>([0, 10000]);
+export default function ListingFilters({SearchParams}: {SearchParams: string}) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const [search, setSearch] = React.useState<string>(searchParams.get('search') || '');
+  const [category, setCategory] = React.useState<string>(searchParams.get('category') || '');
+  const [condition, setCondition] = React.useState<string>(searchParams.get('condition') || '');
+  const [priceRange, setPriceRange] = React.useState<number[]>([
+    Number(searchParams.get('priceMin')) || 0,
+    Number(searchParams.get('priceMax')) || 10000,
+  ]);
 
   let filteri = {
     search: '',
@@ -22,7 +30,7 @@ export default function ListingFilters() {
     stanje: condition,
     cena: {min: 0, max: 1000},
   }
-  console.log(filteri);
+
   const updateCategory = (event: SelectChangeEvent) => {
     setCategory(event.target.value as string);
   };
@@ -45,6 +53,20 @@ export default function ListingFilters() {
     }
   };
 
+  const handleSearch = () => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (search) params.set('search', search);
+    if (category) params.set('category', category);
+    if (condition) params.set('condition', condition);
+    if (priceRange.length === 2) {
+      params.set('priceMin', priceRange[0].toString());
+      params.set('priceMax', priceRange[1].toString());
+    }
+
+    router.push(`?${params.toString()}`);
+  };
+
   return (
     <section>
           <Typography
@@ -58,7 +80,13 @@ export default function ListingFilters() {
 
             {/* Search by name */}
             <Grid size={{ xs: 12, sm: 12, md: 6, lg: 3 }}>
-              <TextField label="Search" variant="outlined" fullWidth />
+              <TextField 
+                value={search}
+                label="Search" 
+                variant="outlined" 
+                fullWidth 
+                onChange={(e) => setSearch(e.target.value)} 
+              />
             </Grid>
 
             {/* Filter by category */}
@@ -116,7 +144,7 @@ export default function ListingFilters() {
             </Grid>
 
             <Grid size={12} sx={{textAlign: 'center'}}>
-              <Button variant="contained" color="primary" size='large'>
+              <Button variant="contained" color="primary" size='large' onClick={handleSearch}>
                 Pretrazi
               </Button>
             </Grid>
