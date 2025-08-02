@@ -1,6 +1,7 @@
 // listing/page.tsx
 import ListingCard from '../card/page';
 import ListingFilters from './listingFilters';
+import prisma from '@/prisma/prisma';
 
 interface ListingPageProps {
   searchParams: {
@@ -10,7 +11,18 @@ interface ListingPageProps {
 
 export default async function ListingPage({ searchParams }: ListingPageProps) {
   let params = JSON.parse(JSON.stringify(await searchParams));
-  console.log("Search params on server:", params);
+  // const offers = await prisma.offer.findMany({
+  //   where: {
+  //     AND: [
+  //       { title: { contains: params.search || '', mode: 'insensitive' } },
+  //       { category: { equals: params.category || '' } },
+  //       { condition: { equals: params.condition || '' } },
+  //       { price: { gte: Number(params.priceMin) || 0, lte: Number(params.priceMax) || 10000 } },
+  //     ],
+  //   },
+  // });
+
+  // able to use prisma here now!
 
   return (
     <main>
