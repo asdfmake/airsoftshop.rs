@@ -11,20 +11,30 @@ interface ListingPageProps {
 
 export default async function ListingPage({ searchParams }: ListingPageProps) {
   let params = JSON.parse(JSON.stringify(await searchParams));
-  const offers = await prisma.offer.findMany();
+  const filters: any = {};
 
-  // getting error while trying to querry the offers:
-  // 
-  // {
-  //   where: {
-  //     AND: [
-  //       { title: { contains: params.search || '', mode: 'insensitive' } },
-  //       { category: { equals: params.category || '' } },
-  //       { condition: { equals: params.condition || '' } },
-  //       { price: { gte: Number(params.priceMin) || 0, lte: Number(params.priceMax) || 10000 } },
-  //     ],
-  //   },
-  // }
+  if (params.search) {
+    filters.title = { contains: params.search, mode: "insensitive" };
+  }
+
+  if (params.category) {
+    filters.category = { equals: params.category };
+  }
+
+  if (params.condition) {
+    filters.condition = { equals: params.condition };
+  }
+
+  // Price filter is optional
+  filters.price = {
+    gte: params.priceMin ? Number(params.priceMin) : 0,
+    lte: params.priceMax ? Number(params.priceMax) : 99999999999,
+  };
+
+  const offers = await prisma.offer.findMany({
+    where: filters,
+  });
+
 
   return (
     <main>
