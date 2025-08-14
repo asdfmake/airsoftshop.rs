@@ -11,7 +11,11 @@ interface ListingPageProps {
 
 export default async function ListingPage({ searchParams }: ListingPageProps) {
   let params = JSON.parse(JSON.stringify(await searchParams));
-  // const offers = await prisma.offer.findMany({
+  const offers = await prisma.offer.findMany();
+
+  // getting error while trying to querry the offers:
+  // 
+  // {
   //   where: {
   //     AND: [
   //       { title: { contains: params.search || '', mode: 'insensitive' } },
@@ -20,15 +24,24 @@ export default async function ListingPage({ searchParams }: ListingPageProps) {
   //       { price: { gte: Number(params.priceMin) || 0, lte: Number(params.priceMax) || 10000 } },
   //     ],
   //   },
-  // });
-
-  // able to use prisma here now!
+  // }
 
   return (
     <main>
       <ListingFilters SearchParams={params} />
       <div>
-        <p>Ovde bi trebalo da ide lista proizvoda</p>
+        {offers.map((offer) => (
+          <ListingCard
+            key={offer.id}
+            images={offer.pictures}
+            title={offer.title}
+            description={offer.description}
+            condition={offer.condition}
+            category={offer.category}
+            contact={offer.contact}
+            price={offer.price}
+          />
+        ))}  
       </div>
     </main>
   );
