@@ -25,10 +25,10 @@ export default function ListingFilters({SearchParams}: {SearchParams: string}) {
   ]);
 
   let filteri = {
-    search: '',
+    search: search,
     kategorija: category,
     stanje: condition,
-    cena: {min: 0, max: 1000},
+    cena: {min: priceRange[0], max: priceRange[1]},
   }
 
   const updateCategory = (event: SelectChangeEvent) => {
@@ -54,17 +54,30 @@ export default function ListingFilters({SearchParams}: {SearchParams: string}) {
   };
 
   const handleSearch = () => {
+    console.log("Searching with filters:", filteri);
     const params = new URLSearchParams(searchParams.toString());
 
     if (search) params.set('search', search);
+    else params.delete('search');
     if (category) params.set('category', category);
+    else params.delete('category');
     if (condition) params.set('condition', condition);
-    if (priceRange.length === 2) {
-      params.set('priceMin', priceRange[0].toString());
-      params.set('priceMax', priceRange[1].toString());
-    }
+    else params.delete('condition');
+    if (priceRange[0] > 0) params.set('priceMin', priceRange[0].toString());
+    else params.delete('priceMin');
+    if (priceRange[1] < 10000) params.set('priceMax', priceRange[1].toString());
+    else params.delete('priceMax');
 
     router.push(`?${params.toString()}`);
+  };
+
+  const resetSearch = () => {
+    setSearch('');
+    setCategory('');
+    setCondition('');
+    setPriceRange([0, 10000]);
+
+    router.push(`/`);
   };
 
   return (
@@ -101,6 +114,7 @@ export default function ListingFilters({SearchParams}: {SearchParams: string}) {
                   label="Kategorija"
                   onChange={updateCategory}
                 >
+                  <MenuItem value=""><em>Kategorija</em></MenuItem>
                   <MenuItem value={"replike"}>replike</MenuItem>
                   <MenuItem value={"rukohvati"}>rukohvati</MenuItem>
                   <MenuItem value={"odeca"}>odeca</MenuItem>
@@ -119,7 +133,8 @@ export default function ListingFilters({SearchParams}: {SearchParams: string}) {
                   label="Stanje"
                   onChange={updateCondition}
                 >
-                  <MenuItem value={"novo"}>Novo</MenuItem>
+                  <MenuItem value=""><em>Stanje</em></MenuItem>
+                  <MenuItem value={"NEW"}>Novo</MenuItem>
                   <MenuItem value={"korisceno"}>Korišćeno</MenuItem>
                   <MenuItem value={"refurbished"}>Refurbished</MenuItem>
                 </Select>
@@ -146,6 +161,9 @@ export default function ListingFilters({SearchParams}: {SearchParams: string}) {
             <Grid size={12} sx={{textAlign: 'center'}}>
               <Button variant="contained" color="primary" size='large' onClick={handleSearch}>
                 Pretrazi
+              </Button>
+              <Button variant="contained" color="error" size='large' onClick={resetSearch} sx={{ margin: "20px 40px" }}>
+                Resetuj filtere
               </Button>
             </Grid>
 
