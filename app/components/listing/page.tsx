@@ -40,18 +40,24 @@ export default async function ListingPage({ searchParams }: ListingPageProps) {
     <main>
       <ListingFilters SearchParams={params} />
       <div>
-        {offers.map((offer) => (
-          <ListingCard
-            key={offer.id}
-            images={offer.pictures}
-            title={offer.title}
-            description={offer.description}
-            condition={offer.condition}
-            category={offer.category}
-            contact={offer.contact}
-            price={offer.price}
-          />
-        ))}  
+        {
+          offers.length > 0 ? (
+            offers.map((offer) => (
+              <ListingCard
+                key={offer.id}
+                images={offer.pictures}
+                title={offer.title}
+                description={offer.description}
+                condition={offer.condition}
+                category={offer.category}
+                contact={offer.contact}
+                price={offer.price}
+              />
+            ))
+          ) : (
+            <h2 style={{ textAlign: "center", margin: "2rem 0", color: "red" }}>Nema oglasa sa tim filterima! 😟</h2>
+          )
+        }
       </div>
     </main>
   );
