@@ -18,11 +18,11 @@ export default async function ListingPage({ searchParams }: ListingPageProps) {
   }
 
   if (params.category) {
-    filters.category = { equals: params.category };
+    filters.category = { equals: params.category.toUpperCase() };
   }
 
   if (params.condition) {
-    filters.condition = { equals: params.condition };
+    filters.condition = { equals: params.condition.toUpperCase() };
   }
 
   // Price filter is optional

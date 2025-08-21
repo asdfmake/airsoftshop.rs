@@ -10,6 +10,7 @@ import React from 'react';
 import Grid from '@mui/material/Grid';
 import { Button, Slider, Typography } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Condition, Category } from '../../services/enums';
 
 
 export default function ListingFilters({SearchParams}: {SearchParams: string}) {
@@ -115,9 +116,17 @@ export default function ListingFilters({SearchParams}: {SearchParams: string}) {
                   onChange={updateCategory}
                 >
                   <MenuItem value=""><em>Kategorija</em></MenuItem>
-                  <MenuItem value={"replike"}>replike</MenuItem>
-                  <MenuItem value={"rukohvati"}>rukohvati</MenuItem>
-                  <MenuItem value={"odeca"}>odeca</MenuItem>
+                  <MenuItem value={Category.AIRSOFT_GUN}>replike</MenuItem>
+                  <MenuItem value={Category.ACCESSORY}>rukohvati</MenuItem>
+                  <MenuItem value={Category.CLOTHING}>odeca</MenuItem>
+                  <MenuItem value={Category.GEAR}>oprema</MenuItem>
+                  <MenuItem value={Category.BATTERY}>baterije</MenuItem>
+                  <MenuItem value={Category.MAGAZINE}>magazini</MenuItem>
+                  <MenuItem value={Category.OPTICS}>optika</MenuItem>
+                  <MenuItem value={Category.PATCH}>zakrpe</MenuItem>
+                  <MenuItem value={Category.GAS}>gas</MenuItem>
+                  <MenuItem value={Category.PART}>delovi</MenuItem>
+                  <MenuItem value={Category.OTHER}>ostalo</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -134,9 +143,11 @@ export default function ListingFilters({SearchParams}: {SearchParams: string}) {
                   onChange={updateCondition}
                 >
                   <MenuItem value=""><em>Stanje</em></MenuItem>
-                  <MenuItem value={"NEW"}>Novo</MenuItem>
-                  <MenuItem value={"korisceno"}>Korišćeno</MenuItem>
-                  <MenuItem value={"refurbished"}>Refurbished</MenuItem>
+                  <MenuItem value={Condition.NEW}>Novo</MenuItem>
+                  <MenuItem value={Condition.USED}>Korišćeno</MenuItem>
+                  <MenuItem value={Condition.LIKE_NEW}>Kao novo</MenuItem>
+                  <MenuItem value={Condition.HEAVILY_USED}>Jako korišćeno</MenuItem>
+                  <MenuItem value={Condition.BROKEN}>Slomljeno</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
