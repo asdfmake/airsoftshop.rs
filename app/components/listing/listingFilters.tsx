@@ -155,17 +155,28 @@ export default function ListingFilters({SearchParams}: {SearchParams: string}) {
             <Grid size={{ xs: 12, sm: 12, md: 6, lg: 3 }}>
               {/* Filter by Price */}
               <Box sx={{ width: '80%', margin: '0 auto' }}>
-                <Typography id="track-false-slider" gutterBottom>
-                  Cena
-                </Typography>
-                <Slider
-                  getAriaLabel={() => 'Minimum distance shift'}
-                  value={priceRange}
-                  onChange={updatePriceRange}
-                  valueLabelDisplay="auto"
-                  getAriaValueText={valuetext}
-                  disableSwap
-                />
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                  <TextField
+                    label="Cena minimum"
+                    type="number"
+                    value={priceRange[0]}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      setPriceRange([isNaN(val) ? 0 : val, priceRange[1]]);
+                    }}
+                    fullWidth
+                  />
+                  <TextField
+                    label="Cena maksimum"
+                    type="number"
+                    value={priceRange[1]}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      setPriceRange([priceRange[0], isNaN(val) ? 0 : val]);
+                    }}
+                    fullWidth
+                  />
+                </Box>
               </Box>
             </Grid>
 
