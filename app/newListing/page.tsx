@@ -6,25 +6,8 @@ import { Container, TextField, MenuItem, Button, Typography, Box } from "@mui/ma
 import fs from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
-
-enum Condition {
-  NEW = "NEW",
-  USED = "USED"
-}
-
-enum Category {
-  AIRSOFT_GUN = "AIRSOFT_GUN",
-  ACCESSORY = "ACCESSORY",
-  CLOTHING = "CLOTHING",
-  GEAR = "GEAR",
-  BATTERY = "BATTERY",
-  MAGAZINE = "MAGAZINE",
-  OPTICS = "OPTICS",
-  PATCH = "PATCH",
-  GAS = "GAS",
-  PART = "PART",
-  OTHER = "OTHER"
-}
+import { Condition, Category } from "../services/enums";
+import { $Enums } from "@/app/generated/prisma";
 
 async function createOffer(formData: FormData) {
   "use server";
@@ -73,8 +56,9 @@ async function createOffer(formData: FormData) {
       locationOfSeller: formData.get("locationOfSeller") as string,
       contact: formData.get("contact") as string,
       price: parseFloat(formData.get("price") as string),
-      condition: formData.get("condition") as Condition,
-      category: formData.get("category") as Category,
+      condition: (formData.get("condition") as Condition).toUpperCase() as $Enums.Condition,
+      category: (formData.get("category") as Category).toUpperCase() as $Enums.Category,
+
       userId: user.id
     }
   });
@@ -129,19 +113,25 @@ export default async function NewListingPage() {
         <TextField name="price" label="Price" type="number" required />
 
         <TextField select name="condition" label="Condition" defaultValue={Condition.NEW}>
-          {Object.values(Condition).map((c) => (
-            <MenuItem key={c} value={c}>
-              {c}
-            </MenuItem>
-          ))}
+          <MenuItem value={Condition.NEW}>Novo</MenuItem>
+          <MenuItem value={Condition.USED}>Korišćeno</MenuItem>
+          <MenuItem value={Condition.LIKE_NEW}>Kao novo</MenuItem>
+          <MenuItem value={Condition.HEAVILY_USED}>Jako korišćeno</MenuItem>
+          <MenuItem value={Condition.BROKEN}>Slomljeno</MenuItem>
         </TextField>
 
         <TextField select name="category" label="Category" defaultValue={Category.AIRSOFT_GUN}>
-          {Object.values(Category).map((cat) => (
-            <MenuItem key={cat} value={cat}>
-              {cat}
-            </MenuItem>
-          ))}
+          <MenuItem value={Category.AIRSOFT_GUN}>replike</MenuItem>
+          <MenuItem value={Category.ACCESSORY}>rukohvati</MenuItem>
+          <MenuItem value={Category.CLOTHING}>odeca</MenuItem>
+          <MenuItem value={Category.GEAR}>oprema</MenuItem>
+          <MenuItem value={Category.BATTERY}>baterije</MenuItem>
+          <MenuItem value={Category.MAGAZINE}>magazini</MenuItem>
+          <MenuItem value={Category.OPTICS}>optika</MenuItem>
+          <MenuItem value={Category.PATCH}>zakrpe</MenuItem>
+          <MenuItem value={Category.GAS}>gas</MenuItem>
+          <MenuItem value={Category.PART}>delovi</MenuItem>
+          <MenuItem value={Category.OTHER}>ostalo</MenuItem>
         </TextField>
 
         <SubmitButton />

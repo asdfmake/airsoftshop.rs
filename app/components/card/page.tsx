@@ -1,6 +1,9 @@
+"use client"
+
 import React from "react";
 import { Box, Typography, Card, CardContent, CardActions, Button, Chip, Divider } from "@mui/material";
-import Carousel from "react-material-ui-carousel";
+import dynamic from "next/dynamic";
+const Carousel = dynamic(() => import("react-material-ui-carousel"), { ssr: false });
 
 type ListingCardProps = {
   images: string[];
@@ -12,7 +15,7 @@ type ListingCardProps = {
   price: number;
 };
 
-const ListingCard: React.FC<ListingCardProps> = ({
+export default function ListingCard({
   images,
   title,
   description,
@@ -20,7 +23,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
   category,
   contact,
   price,
-}) => {
+}: ListingCardProps) {
   return (
     <Card sx={{ width: "100%", display: "flex", flexDirection: { xs: "column", md: "row" }, minHeight: 250 }}>
       {/* Carousel Section */}
@@ -77,6 +80,4 @@ const ListingCard: React.FC<ListingCardProps> = ({
       </Box>
     </Card>
   );
-};
-
-export default ListingCard;
+}

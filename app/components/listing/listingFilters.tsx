@@ -10,6 +10,7 @@ import React from 'react';
 import Grid from '@mui/material/Grid';
 import { Button, Slider, Typography } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Condition, Category } from '../../services/enums';
 
 
 export default function ListingFilters({SearchParams}: {SearchParams: string}) {
@@ -25,10 +26,10 @@ export default function ListingFilters({SearchParams}: {SearchParams: string}) {
   ]);
 
   let filteri = {
-    search: '',
+    search: search,
     kategorija: category,
     stanje: condition,
-    cena: {min: 0, max: 1000},
+    cena: {min: priceRange[0], max: priceRange[1]},
   }
 
   const updateCategory = (event: SelectChangeEvent) => {
@@ -54,17 +55,30 @@ export default function ListingFilters({SearchParams}: {SearchParams: string}) {
   };
 
   const handleSearch = () => {
+    console.log("Searching with filters:", filteri);
     const params = new URLSearchParams(searchParams.toString());
 
     if (search) params.set('search', search);
+    else params.delete('search');
     if (category) params.set('category', category);
+    else params.delete('category');
     if (condition) params.set('condition', condition);
-    if (priceRange.length === 2) {
-      params.set('priceMin', priceRange[0].toString());
-      params.set('priceMax', priceRange[1].toString());
-    }
+    else params.delete('condition');
+    if (priceRange[0] > 0) params.set('priceMin', priceRange[0].toString());
+    else params.delete('priceMin');
+    if (priceRange[1] < 10000) params.set('priceMax', priceRange[1].toString());
+    else params.delete('priceMax');
 
     router.push(`?${params.toString()}`);
+  };
+
+  const resetSearch = () => {
+    setSearch('');
+    setCategory('');
+    setCondition('');
+    setPriceRange([0, 10000]);
+
+    router.push(`/`);
   };
 
   return (
@@ -101,9 +115,18 @@ export default function ListingFilters({SearchParams}: {SearchParams: string}) {
                   label="Kategorija"
                   onChange={updateCategory}
                 >
-                  <MenuItem value={"replike"}>replike</MenuItem>
-                  <MenuItem value={"rukohvati"}>rukohvati</MenuItem>
-                  <MenuItem value={"odeca"}>odeca</MenuItem>
+                  <MenuItem value=""><em>Kategorija</em></MenuItem>
+                  <MenuItem value={Category.AIRSOFT_GUN}>replike</MenuItem>
+                  <MenuItem value={Category.ACCESSORY}>rukohvati</MenuItem>
+                  <MenuItem value={Category.CLOTHING}>odeca</MenuItem>
+                  <MenuItem value={Category.GEAR}>oprema</MenuItem>
+                  <MenuItem value={Category.BATTERY}>baterije</MenuItem>
+                  <MenuItem value={Category.MAGAZINE}>magazini</MenuItem>
+                  <MenuItem value={Category.OPTICS}>optika</MenuItem>
+                  <MenuItem value={Category.PATCH}>zakrpe</MenuItem>
+                  <MenuItem value={Category.GAS}>gas</MenuItem>
+                  <MenuItem value={Category.PART}>delovi</MenuItem>
+                  <MenuItem value={Category.OTHER}>ostalo</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -119,9 +142,12 @@ export default function ListingFilters({SearchParams}: {SearchParams: string}) {
                   label="Stanje"
                   onChange={updateCondition}
                 >
-                  <MenuItem value={"novo"}>Novo</MenuItem>
-                  <MenuItem value={"korisceno"}>Korišćeno</MenuItem>
-                  <MenuItem value={"refurbished"}>Refurbished</MenuItem>
+                  <MenuItem value=""><em>Stanje</em></MenuItem>
+                  <MenuItem value={Condition.NEW}>Novo</MenuItem>
+                  <MenuItem value={Condition.USED}>Korišćeno</MenuItem>
+                  <MenuItem value={Condition.LIKE_NEW}>Kao novo</MenuItem>
+                  <MenuItem value={Condition.HEAVILY_USED}>Jako korišćeno</MenuItem>
+                  <MenuItem value={Condition.BROKEN}>Slomljeno</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -129,23 +155,37 @@ export default function ListingFilters({SearchParams}: {SearchParams: string}) {
             <Grid size={{ xs: 12, sm: 12, md: 6, lg: 3 }}>
               {/* Filter by Price */}
               <Box sx={{ width: '80%', margin: '0 auto' }}>
-                <Typography id="track-false-slider" gutterBottom>
-                  Cena
-                </Typography>
-                <Slider
-                  getAriaLabel={() => 'Minimum distance shift'}
-                  value={priceRange}
-                  onChange={updatePriceRange}
-                  valueLabelDisplay="auto"
-                  getAriaValueText={valuetext}
-                  disableSwap
-                />
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                  <TextField
+                    label="Cena minimum"
+                    type="number"
+                    value={priceRange[0]}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      setPriceRange([isNaN(val) ? 0 : val, priceRange[1]]);
+                    }}
+                    fullWidth
+                  />
+                  <TextField
+                    label="Cena maksimum"
+                    type="number"
+                    value={priceRange[1]}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      setPriceRange([priceRange[0], isNaN(val) ? 0 : val]);
+                    }}
+                    fullWidth
+                  />
+                </Box>
               </Box>
             </Grid>
 
             <Grid size={12} sx={{textAlign: 'center'}}>
               <Button variant="contained" color="primary" size='large' onClick={handleSearch}>
                 Pretrazi
+              </Button>
+              <Button variant="contained" color="error" size='large' onClick={resetSearch} sx={{ margin: "20px 40px" }}>
+                Resetuj filtere
               </Button>
             </Grid>
 

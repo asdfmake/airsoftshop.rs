@@ -17,22 +17,22 @@ const handler = NextAuth({
     ],
     callbacks: {
         async signIn({ user, account, profile }) {
-        // Check if user exists in DB
-        const existingUser = await prisma.user.findUnique({
-            where: { email: user.email! },
-        });
-
-        if (!existingUser) {
-            await prisma.user.create({
-            data: {
-                email: user.email!,
-                username: user.name?.trim() || user.email?.split("@")[0] || "unknown",
-                profilePicture: user.image,
-                provider: account?.provider ?? "unknown",
-            },
+            // Check if user exists in DB
+            const existingUser = await prisma.user.findUnique({
+                where: { email: user.email! },
             });
-        }
-        return true;
+
+            if (!existingUser) {
+                await prisma.user.create({
+                    data: {
+                        email: user.email!,
+                        username: user.name?.trim() || user.email?.split("@")[0] || "unknown",
+                        profilePicture: user.image,
+                        provider: account?.provider ?? "unknown",
+                    },
+                });
+            }
+            return true;
         }
     },
     // pages: {

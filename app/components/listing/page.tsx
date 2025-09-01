@@ -11,24 +11,53 @@ interface ListingPageProps {
 
 export default async function ListingPage({ searchParams }: ListingPageProps) {
   let params = JSON.parse(JSON.stringify(await searchParams));
-  // const offers = await prisma.offer.findMany({
-  //   where: {
-  //     AND: [
-  //       { title: { contains: params.search || '', mode: 'insensitive' } },
-  //       { category: { equals: params.category || '' } },
-  //       { condition: { equals: params.condition || '' } },
-  //       { price: { gte: Number(params.priceMin) || 0, lte: Number(params.priceMax) || 10000 } },
-  //     ],
-  //   },
-  // });
+  const filters: any = {};
 
-  // able to use prisma here now!
+  if (params.search) {
+    filters.title = { contains: params.search, mode: "insensitive" };
+  }
+
+  if (params.category) {
+    filters.category = { equals: params.category.toUpperCase() };
+  }
+
+  if (params.condition) {
+    filters.condition = { equals: params.condition.toUpperCase() };
+  }
+
+  // Price filter is optional
+  filters.price = {
+    gte: params.priceMin ? Number(params.priceMin) : 0,
+    lte: params.priceMax ? Number(params.priceMax) : 99999999999,
+  };
+
+  const offers = await prisma.offer.findMany({
+    where: filters,
+  });
+
 
   return (
     <main>
       <ListingFilters SearchParams={params} />
       <div>
-        <p>Ovde bi trebalo da ide lista proizvoda</p>
+        {
+          offers.length > 0 ? (
+            offers.map((offer) => (
+              <ListingCard
+                key={offer.id}
+                images={offer.pictures}
+                title={offer.title}
+                description={offer.description}
+                condition={offer.condition}
+                category={offer.category}
+                contact={offer.contact}
+                price={offer.price}
+              />
+            ))
+          ) : (
+            <h2 style={{ textAlign: "center", margin: "2rem 0", color: "red" }}>Nema oglasa sa tim filterima! 😟</h2>
+          )
+        }
       </div>
     </main>
   );
